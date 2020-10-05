@@ -1,4 +1,4 @@
-version: "2.1"
+version: '3'
 services:
     emby:
         image: linuxserver/emby
@@ -22,7 +22,6 @@ services:
             - /dev/video10:/dev/video10 #optional
             - /dev/video11:/dev/video11 #optional
         restart: unless-stopped
-
     jackett:
         image: linuxserver/jackett
         container_name: jackett
@@ -69,4 +68,34 @@ services:
           - ${DOWNLOADS_FOLDER}:/downloads
         ports:
           - 8989:8989
+        pia-qbittorrent:
+        image: j4ym0/pia-qbittorrent
+        container_name: pia-qbittorrent
+        cap_add:
+            - NET_ADMIN
+        environment:
+            - REGION=Romania
+            - USER=p2350700
+            - PASSWORD=a3M8EvNet2
+        volumes:
+            - ./config:/config
+            - /storage/_completed/:/downloads
+        ports:
+            - "8888:8888"
+        restart: unless-stopped
+    pia-qbittorrent:
+        image: j4ym0/pia-qbittorrent
+        container_name: pia-qbittorrent
+        cap_add:
+            - NET_ADMIN
+        environment:
+            - REGION=${PIA_REGION}
+            - USER=${PIA_USER}
+            - PASSWORD=${PIA_PASSWORD}
+        volumes:
+            - ./qbittorrent-config:/config
+            - ${DOWNLOADS_FOLDER}:/downloads
+        ports:
+            - "8888:8888"
+        restart: unless-stopped
     
